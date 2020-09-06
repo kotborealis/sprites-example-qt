@@ -24,7 +24,8 @@ public:
 
     QGraphicsScene *scene;
     Sprite *sprite;
-    int moveSpriteX = 0;
+    bool moveSpritePositiveX = false;
+    bool moveSpriteNegativeX = false;
     QTimer *inputHandlerTimer;
 
 private:

@@ -34,21 +34,22 @@ bool MainWindow::eventFilter(QObject *object, QEvent* event) {
     if(event->type() == QEvent::KeyPress) {
         auto keyEvent = static_cast<QKeyEvent *>(event);
         if(keyEvent->key() == Qt::Key_D)
-            moveSpriteX = 1;
+            moveSpritePositiveX = true;
         else if(keyEvent->key() == Qt::Key_A)
-            moveSpriteX = -1;
+            moveSpriteNegativeX = true;
     }
     if(event->type() == QEvent::KeyRelease) {
         auto keyEvent = static_cast<QKeyEvent *>(event);
         if(keyEvent->key() == Qt::Key_D)
-            moveSpriteX = 0;
+            moveSpritePositiveX = false;
         else if(keyEvent->key() == Qt::Key_A)
-            moveSpriteX = 0;
+            moveSpriteNegativeX = false;
     }
 }
 
 void MainWindow::handleInput() {
-    sprite->setPos(sprite->scenePos() + QPointF(20 * moveSpriteX, 0));
+    auto direction = moveSpriteNegativeX * -1 + moveSpritePositiveX * 1;
+    sprite->setPos(sprite->scenePos() + QPointF(20 * direction, 0));
 }
 
 MainWindow::~MainWindow()
