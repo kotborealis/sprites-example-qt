@@ -11,6 +11,13 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    this->installEventFilter(this);
+
+    inputHandlerTimer = new QTimer();
+    inputHandlerTimer->start(25);
+
+    connect(inputHandlerTimer, &QTimer::timeout, this, &MainWindow::handleInput);
+
     ui->setupUi(this);
 
     scene = new QGraphicsScene(this);
@@ -19,17 +26,29 @@ MainWindow::MainWindow(QWidget *parent)
 
     sprite = new Sprite();
     scene->addItem(sprite);
-
     scene->addItem(new Sprite);
-
     sprite->setPos(400, 400);
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event) {
-    if(event->key() == Qt::Key_D)
-        sprite->setPos(sprite->scenePos() + QPointF(20, 0));
-    else if(event->key() == Qt::Key_A)
-        sprite->setPos(sprite->scenePos() + QPointF(-20, 0));
+bool MainWindow::eventFilter(QObject *object, QEvent* event) {
+    if(event->type() == QEvent::KeyPress) {
+        auto keyEvent = static_cast<QKeyEvent *>(event);
+        if(keyEvent->key() == Qt::Key_D)
+            moveSpriteX = 1;
+        else if(keyEvent->key() == Qt::Key_A)
+            moveSpriteX = -1;
+    }
+    if(event->type() == QEvent::KeyRelease) {
+        auto keyEvent = static_cast<QKeyEvent *>(event);
+        if(keyEvent->key() == Qt::Key_D)
+            moveSpriteX = 0;
+        else if(keyEvent->key() == Qt::Key_A)
+            moveSpriteX = 0;
+    }
+}
+
+void MainWindow::handleInput() {
+    sprite->setPos(sprite->scenePos() + QPointF(20 * moveSpriteX, 0));
 }
 
 MainWindow::~MainWindow()

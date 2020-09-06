@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QMainWindow>
 #include <sprite.h>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,10 +18,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void keyPressEvent(QKeyEvent *event);
+    bool eventFilter(QObject *object, QEvent* event) override;
+
+    void handleInput();
 
     QGraphicsScene *scene;
     Sprite *sprite;
+    int moveSpriteX = 0;
+    QTimer *inputHandlerTimer;
 
 private:
     Ui::MainWindow *ui;
